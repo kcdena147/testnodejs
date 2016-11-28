@@ -1,23 +1,21 @@
-var express = require('express'),
-socketIO = require('socket.io'),
+'use strict';
 
-port = process.env.PORT || 8080,
-ip = process.env.IP || '127.0.0.1',
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
 
-server = express()
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`)),
-  
-io = socketIO(server);
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
 
+const server = express()
+ // .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-var run = function(socket){
-// Socket process here!!!
-socket.emit('greeting', 'Hello from Socket.IO');
-// 'user-join' event handler here
-socket.on('user-join', function(data){
-console.log('User %s have joined', data);
-socket.broadcast.emit('new-user', data);
-})
-}
+const io = socketIO(server);
 
-io.on('connection', run);
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
+
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
