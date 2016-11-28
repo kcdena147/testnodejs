@@ -1,17 +1,19 @@
 {
-  "name": "port-scanning",
-  "version": "0.0.0",
-  "description": "",
+  "name": "websockets-socket.io",
+  "version": "1.0.0",
   "engines": {
-    "node": "4.1.1"
+    "node": "6.2.0"
   },
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "author": "VietJS <info@vietjs.com> (http://vietjs.com/)",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-   "dependencies": {
-        "socket.io": "^1.7.1"
-    }
+  "dependencies": {
+    "express": "4.13.4",
+    "socket.io": "1.4.6"
+  }
 }

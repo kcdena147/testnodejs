@@ -1,32 +1,21 @@
-var http = require('http'),
+'use strict';
 
-socketIO = require('socket.io'),
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
 
-port = process.env.PORT || 8080,
-ip = process.env.IP || '127.0.0.1',
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
 
-server = http.createServer().listen(port, ip, function(){
+const server = express()
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-console.log('Socket.IO server started at %s:%s!', ip, port);
+const io = socketIO(server);
 
-}),
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
 
-io = socketIO.listen(server);
-
-io.set('match origin protocol', true);
-
-io.set('origins', '*:*');
-
-io.set('log level', 1);
-
-var run = function(socket){
-// Socket process here!!!
-socket.emit('greeting', 'Hello from Socket.IO');
-// 'user-join' event handler here
-socket.on('user-join', function(data){
-console.log('User %s have joined', data);
-socket.broadcast.emit('new-user', data);
-})
-}
-
-io.sockets.on('connection', run);
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
